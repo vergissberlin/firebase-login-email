@@ -6,5 +6,3 @@ env:
   global:
   - secure: CRTJgZah7Owh+Yn4hkksiY/2khw5mY/eKsGbPKVxFPhhkNT/8Wq6N8FBbR7qubWhs8+xejmUvgYvSGOzN91JyYUQLXtGnYl6fk4hQkVwpnwonVE55Oo7zVZlEJJ4UMpAw5QExCMBs3Gku8nNAPmL8eagXpChkKaLd3VlPDEVSHk=
   - secure: I4QSnhT+U4DZoprYcjKxNwZOE2rI0uzLewFsSWTnURqclYsRwaG4dUNO6lxyPKE2uCpHqlxdJPNZBtUD7M56w+SK8571NLxcebhWiXgOUdAMxLk0o18AVcVSEGzHXhfuGolwteKjA/Jaq+AdPJGm2A5tGPAyWlnAJSdElOFu2xM=
-  - FIREBASE_ID: v123456
-  - FIREBASE_EMAIL: travis@andrelademann.de
