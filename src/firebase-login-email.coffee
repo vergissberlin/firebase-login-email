@@ -28,16 +28,13 @@ class FirebaseLoginEmail
       if error
         switch error.code
           when "INVALID_EMAIL"
-            console.error "The specified user account email is invalid."
+            error = "The specified user account email is invalid."
           when "INVALID_PASSWORD"
-            console.error "The specified user account password is incorrect."
+            error = "The specified user account password is incorrect."
           when "INVALID_USER"
-            console.error "The specified user account does not exist."
+            error = "The specified user account does not exist."
           else
-            console.error "Error logging user in:", error
-        return
-      else
-        console.info "Firebase authenticated successfully."
+            error = "Error logging user in: " + error.toString()
 
       callback error, authData
 

@@ -2,7 +2,7 @@ firebase-login-email
 =====================
 
 [![Dependency Status](https://gemnasium.com/vergissberlin/firebase-login-email.svg)](https://gemnasium.com/vergissberlin/firebase-login-email)
-
+[![Build Status](https://travis-ci.org/vergissberlin/firebase-login-email.svg)](https://travis-ci.org/vergissberlin/firebase-login-email)
 
 Authenticating Users with Email & Password
 ------------------------------------------

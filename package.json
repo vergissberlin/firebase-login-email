@@ -4,7 +4,7 @@
   "description": "Authenticate your Firebase using your Firebase simple login credentials",
   "main": "dist/firebase-login-email.js",
   "scripts": {
-    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
+    "test": "node tests/integration/firebase-login-email-integration.js"
   },
   "repository": {
     "type": "git",

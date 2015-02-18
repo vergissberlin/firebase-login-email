@@ -43,20 +43,17 @@
         if (error) {
           switch (error.code) {
             case "INVALID_EMAIL":
-              console.error("The specified user account email is invalid.");
+              error = "The specified user account email is invalid.";
               break;
             case "INVALID_PASSWORD":
-              console.error("The specified user account password is incorrect.");
+              error = "The specified user account password is incorrect.";
               break;
             case "INVALID_USER":
-              console.error("The specified user account does not exist.");
+              error = "The specified user account does not exist.";
               break;
             default:
-              console.error("Error logging user in:", error);
+              error = "Error logging user in: " + error.toString();
           }
-          return;
-        } else {
-          console.info("Firebase authenticated successfully.");
         }
         return callback(error, authData);
       });
