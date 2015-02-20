@@ -4,6 +4,7 @@
 .editorconfig
 .git
 .hg
+.idea
 .lock-wscript
 .travis.yml
 .wafpickle-*

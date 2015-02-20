@@ -1,6 +1,10 @@
+# OS
+.*.swp
+._*
+.DS_Store
+
 # Logs
 logs
-*.log
 
 # Runtime data
 pids
@@ -26,3 +30,6 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+# IDEs
+.idea
