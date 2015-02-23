@@ -3,6 +3,9 @@ firebase-login-email
 
 [![Dependency Status](https://gemnasium.com/vergissberlin/firebase-login-email.svg)](https://gemnasium.com/vergissberlin/firebase-login-email)
 [![Build Status](https://travis-ci.org/vergissberlin/firebase-login-email.svg)](https://travis-ci.org/vergissberlin/firebase-login-email)
+[![npm version](https://img.shields.io/npm/v/firebase-login-email.png)](https://npmjs.org/package/nprogress "View this project on npm")
+[![Issues](http://img.shields.io/github/issues/vergissberlin/firebase-login-email.svg)]( https://github.com/rstacruz/firebase-login-email/issues )
+
 
 Authenticating Users with Email & Password
 ------------------------------------------
@@ -38,11 +41,13 @@ Example
     );
 ```
 
-Issues
-------
+Support
+-------
 
 Please report issues to [ticket system](https://github.com/vergissberlin/firebase-login-email/issues).
 Pull requests are welcome here!
+
+
 
 Contributing
 ------------
@@ -70,3 +75,8 @@ $ node tests/integration/firebase-login-email-integration.js
 Thanks to
 ---------
 1. A special thanks to the developers of **NodeJS** and **Firebase**.
+
+
+[contributors]: http://github.com/vergissberlin/firebase-login-email/contributors
+[MIT License]: http://mit-license.org/
+
