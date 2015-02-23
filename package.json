@@ -1,6 +1,6 @@
 {
   "name": "firebase-login-email",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "This package is a wrapper to Firebase simple login including all dependencies with the exception of firebase it self. Authenticate your Firebase using your Firebase simple login credentials.",
   "main": "dist/firebase-login-email.js",
   "scripts": {
