@@ -10,11 +10,14 @@ firebase-login-email
 Authenticating Users with Email & Password
 ------------------------------------------
 
-Firebase makes it easy to integrate email and password authentication into your app. Firebase automatically stores your users' credentials securely (using bcrypt) and redundantly (daily off-site backups).
+Firebase makes it easy to integrate [email and password authentication](https://www.firebase.com/docs/web/guide/login/password.html) into your app. Firebase automatically stores your users' credentials securely (using bcrypt) and redundantly (daily off-site backups).
 
 This separates sensitive user credentials from your application data, and lets you focus on the user interface and experience for your app.
 Allows your node applications to authenticate a Firebase reference using Firebase **Simple Login** with _email_ and _password_.
 
+Important
+---------
+> :heavy_exclamation_mark: Do not embet your credentials on public code!
 
 Installation
 ------------
