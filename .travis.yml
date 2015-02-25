@@ -2,7 +2,16 @@ language: node_js
 node_js:
 - '0.11'
 - '0.10'
+
 env:
   global:
   - secure: CRTJgZah7Owh+Yn4hkksiY/2khw5mY/eKsGbPKVxFPhhkNT/8Wq6N8FBbR7qubWhs8+xejmUvgYvSGOzN91JyYUQLXtGnYl6fk4hQkVwpnwonVE55Oo7zVZlEJJ4UMpAw5QExCMBs3Gku8nNAPmL8eagXpChkKaLd3VlPDEVSHk=
   - secure: I4QSnhT+U4DZoprYcjKxNwZOE2rI0uzLewFsSWTnURqclYsRwaG4dUNO6lxyPKE2uCpHqlxdJPNZBtUD7M56w+SK8571NLxcebhWiXgOUdAMxLk0o18AVcVSEGzHXhfuGolwteKjA/Jaq+AdPJGm2A5tGPAyWlnAJSdElOFu2xM=
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/2bf1ce7f09a1cd6c1642
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: false     # default: false
