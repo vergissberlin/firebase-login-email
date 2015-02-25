@@ -4,6 +4,7 @@ firebase-login-email
 [![Dependency Status](https://gemnasium.com/vergissberlin/firebase-login-email.svg)](https://gemnasium.com/vergissberlin/firebase-login-email)
 [![Build Status](https://travis-ci.org/vergissberlin/firebase-login-email.svg)](https://travis-ci.org/vergissberlin/firebase-login-email)
 [![npm version](https://img.shields.io/npm/v/firebase-login-email.png)](https://npmjs.org/package/firebase-login-email "View this project on npm")
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/vergissberlin/firebase-login-email?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Issues](http://img.shields.io/github/issues/vergissberlin/firebase-login-email.svg)]( https://github.com/vergissberlin/firebase-login-email/issues "GitHub ticket system")
 
 
