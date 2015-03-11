@@ -80,7 +80,8 @@ Thanks to
 ---------
 1. A special thanks to the developers of **NodeJS** and **Firebase**.
 
-
 [contributors]: http://github.com/vergissberlin/firebase-login-email/contributors
 [MIT License]: http://mit-license.org/
 
+---
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/vergissberlin/firebase-login-email/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
