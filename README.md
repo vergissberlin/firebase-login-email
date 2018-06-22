@@ -84,4 +84,4 @@ Thanks to
 [MIT License]: http://mit-license.org/
 
 ---
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/vergissberlin/firebase-login-email/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/vergissberlin/firebase-login-email/trend.png)](https://bitdeli.com/free "Bitdeli Badge") [![Greenkeeper badge](https://badges.greenkeeper.io/vergissberlin/firebase-login-email.svg)](https://greenkeeper.io/)
