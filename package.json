@@ -39,7 +39,7 @@
   "devDependencies": {
     "coffee-script": "^1.7.1",
     "coffeelint": "^2.1.0",
-    "firebase": "^5.1.0",
+    "firebase": "5.1.0",
     "grunt": "^1.0.3",
     "grunt-coffeelint": "0.0.16",
     "grunt-contrib-clean": "^1.1.0",
