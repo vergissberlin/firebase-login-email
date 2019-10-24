@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/vergissberlin/firebase-login-email",
   "dependencies": {
-    "firebase": "^5.1.0"
+    "firebase": "^7.2.2"
   },
   "devDependencies": {
     "coffee-script": "^1.7.1",
