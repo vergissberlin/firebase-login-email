@@ -40,7 +40,7 @@
     "coffee-script": "^1.7.1",
     "coffeelint": "^2.1.0",
     "firebase": "^5.1.0",
-    "grunt": "^1.0.3",
+    "grunt": "^1.1.0",
     "grunt-coffeelint": "0.0.16",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-coffee": "^2.0.0",
