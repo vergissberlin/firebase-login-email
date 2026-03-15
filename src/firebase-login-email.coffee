@@ -9,33 +9,34 @@
  * and lets you focus on the user interface and experience for your app.
  *
  * @author  André Lademann <vergissberlin@googlemail.com>
- * @link    https://www.firebase.com/docs/web/guide/login/password.html
- * @param   {*} ref Firebase object reference
+ * @link    https://firebase.google.com/docs/auth/web/password-auth
+ * @param   {*} app Firebase app instance
  * @param   {*} data Authentication object with email and password
  * @param   {*} callback Callback function
 ###
 class FirebaseLoginEmail
 
-  constructor: (ref = {}, data = {}, callback = {}) ->
+  constructor: (app = {}, data = {}, callback = {}) ->
     # Validation
     if typeof data.email isnt "string"
       throw new Error "Data object must have an \"email\" field!"
     if typeof data.password isnt "string"
       throw new Error "Data object must have an \"password\" field!"
 
-    ref.authWithPassword {email: data.email, password: data.password}
-    , (error, authData)->
-      if error
-        switch error.code
-          when "INVALID_EMAIL"
-            error = "The specified user account email is invalid."
-          when "INVALID_PASSWORD"
-            error = "The specified user account password is incorrect."
-          when "INVALID_USER"
-            error = "The specified user account does not exist."
-          else
-            error = "Error logging user in: " + error.toString()
+    app.auth().signInWithEmailAndPassword(data.email, data.password)
+    .then (userCredential) ->
+      callback null, userCredential.user
+    .catch (error) ->
+      switch error.code
+        when "auth/invalid-email"
+          error = new Error "The specified user account email is invalid."
+        when "auth/wrong-password"
+          error = new Error "The specified user account password is incorrect."
+        when "auth/user-not-found"
+          error = new Error "The specified user account does not exist."
+        else
+          error = new Error "Error logging user in: " + error.toString()
 
-      callback error, authData
+      callback error, null
 
 module.exports = FirebaseLoginEmail

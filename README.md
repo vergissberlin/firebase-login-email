@@ -33,14 +33,20 @@ Example
 -------
 
 ```javascript
-    var ref = new Firebase('https://<Your Firebase>.firebaseio.com');
+    var firebase = require('firebase/app');
+    require('firebase/auth');
 
-    FirebaseLoginEmail(ref, {
+    var app = firebase.initializeApp({
+        apiKey: "<Your Firebase API Key>",
+        authDomain: "<Your Project ID>.firebaseapp.com"
+    });
+
+    FirebaseLoginEmail(app, {
             email: "<Your Email>",
             password: "<Your Password>"
         },
-        function (error, data) {
-            console.log(data.token);
+        function (error, user) {
+            console.log(user.uid);
         }
     );
 ```
@@ -69,7 +75,8 @@ Install locally
 ```bash
 $ cd /path/to/firebase-login-email/
 $ npm install
-$ export FIREBASE_ID=<YOUR_TEST_ID>
+$ export FIREBASE_API_KEY=<YOUR_API_KEY>
+$ export FIREBASE_AUTH_DOMAIN=<YOUR_PROJECT_ID>.firebaseapp.com
 $ export FIREBASE_EMAIL=<test@email.com>
 $ export FIREBASE_PASSWORD=<1234567>
 $ node tests/integration/firebase-login-email-integration.js
