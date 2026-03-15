@@ -1,22 +1,29 @@
 /*
  Before run test, input follow on your CLI
- export FIREBASE_ID=<YOUR-FIREBASE-ID>
+ export FIREBASE_API_KEY=<YOUR-FIREBASE-API-KEY>
+ export FIREBASE_AUTH_DOMAIN=<YOUR-PROJECT-ID>.firebaseapp.com
  export FIREBASE_EMAIL=<YOUR-EMAIL>
  export FIREBASE_PASSWORD=<YOUR-PASSWORD>
 
- If you already done this, and setupt your Firebase Account
- your can run the test with:
+ If you already done this, and setup your Firebase Account
+ you can run the test with:
 
  node tests/integration/firebase-login-email-integration.js
  */
 
 // Requirements
-var Firebase = require('firebase');
+var firebase = require('firebase/app');
+require('firebase/auth');
 var FirebaseLoginEmail = require('../../dist/firebase-login-email');
 
+// Initialize Firebase app
+var app = firebase.initializeApp({
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN
+});
+
 // Login process
-var ref = new Firebase('https://' + process.env.FIREBASE_ID + '.firebaseio.com');
-FirebaseLoginEmail(ref, {
+FirebaseLoginEmail(app, {
     debug: true,
     email: process.env.FIREBASE_EMAIL,
     password: process.env.FIREBASE_PASSWORD
