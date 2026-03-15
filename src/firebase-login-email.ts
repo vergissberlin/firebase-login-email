@@ -15,7 +15,7 @@
  * @param   {*} callback Callback function
  */
 class FirebaseLoginEmail {
-    constructor(app = {}, data = {}, callback = () => { }) {
+    constructor(app: any = {}, data: any = {}, callback: Function = () => {}) {
         // Validation
         if (typeof data.email !== 'string') {
             throw new Error('Data object must have an "email" field!');
@@ -23,26 +23,29 @@ class FirebaseLoginEmail {
         if (typeof data.password !== 'string') {
             throw new Error('Data object must have an "password" field!');
         }
+
         app.auth().signInWithEmailAndPassword(data.email, data.password)
-            .then((userCredential) => {
-            callback(null, userCredential.user);
-        })
-            .catch((error) => {
-            switch (error.code) {
-                case 'auth/invalid-email':
-                    error = new Error('The specified user account email is invalid.');
-                    break;
-                case 'auth/wrong-password':
-                    error = new Error('The specified user account password is incorrect.');
-                    break;
-                case 'auth/user-not-found':
-                    error = new Error('The specified user account does not exist.');
-                    break;
-                default:
-                    error = new Error('Error logging user in: ' + error.toString());
-            }
-            callback(error, null);
-        });
+            .then((userCredential: any) => {
+                callback(null, userCredential.user);
+            })
+            .catch((error: any) => {
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        error = new Error('The specified user account email is invalid.');
+                        break;
+                    case 'auth/wrong-password':
+                        error = new Error('The specified user account password is incorrect.');
+                        break;
+                    case 'auth/user-not-found':
+                        error = new Error('The specified user account does not exist.');
+                        break;
+                    default:
+                        error = new Error('Error logging user in: ' + error.toString());
+                }
+
+                callback(error, null);
+            });
     }
 }
+
 module.exports = FirebaseLoginEmail;
