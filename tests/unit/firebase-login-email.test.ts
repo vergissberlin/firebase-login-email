@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+const mockGetAuth = vi.fn(() => ({}));
 const mockSignInWithEmailAndPassword = vi.fn();
 
 vi.mock('firebase/auth', () => ({
-  getAuth: vi.fn(() => ({})),
+  getAuth: mockGetAuth,
   signInWithEmailAndPassword: mockSignInWithEmailAndPassword,
 }));
 
@@ -15,10 +16,19 @@ describe('FirebaseLoginEmail', () => {
   const fakeApp = { name: '[DEFAULT]', options: {} };
 
   beforeEach(() => {
+    mockGetAuth.mockClear();
     mockSignInWithEmailAndPassword.mockReset();
   });
 
-  it('calls signInWithEmailAndPassword with app, email and password', () => {
+  it('calls getAuth with the provided app', () => {
+    mockSignInWithEmailAndPassword.mockResolvedValue({ user: { uid: '1' } });
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, vi.fn());
+    expect(mockGetAuth).toHaveBeenCalledWith(fakeApp);
+  });
+
+  it('calls signInWithEmailAndPassword with auth, email and password', () => {
+    const authInstance = {};
+    mockGetAuth.mockReturnValue(authInstance);
     mockSignInWithEmailAndPassword.mockResolvedValue({
       user: { uid: 'user-123', email: 'test@example.com' },
     });
@@ -27,7 +37,7 @@ describe('FirebaseLoginEmail', () => {
     new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'secret' }, callback);
 
     expect(mockSignInWithEmailAndPassword).toHaveBeenCalledWith(
-      expect.anything(),
+      authInstance,
       'a@b.co',
       'secret'
     );
@@ -97,5 +107,62 @@ describe('FirebaseLoginEmail', () => {
     expect(() => {
       new FirebaseLoginEmail(fakeApp, { email: 'a@b.co' }, () => {});
     }).toThrow('password');
+  });
+
+  it('throws if data.email is not a string', () => {
+    expect(() => {
+      new FirebaseLoginEmail(fakeApp, { email: 123, password: 'pwd' }, () => {});
+    }).toThrow('email');
+  });
+
+  it('throws if data.password is not a string', () => {
+    expect(() => {
+      new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: null }, () => {});
+    }).toThrow('password');
+  });
+
+  it('invokes callback with generic error for unknown auth error code', async () => {
+    mockSignInWithEmailAndPassword.mockRejectedValue({ code: 'auth/too-many-requests' });
+
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledWith(
+        expect.objectContaining({ message: expect.stringContaining('Error logging user in') }),
+        null
+      );
+    });
+  });
+
+  it('invokes callback exactly once on success', async () => {
+    mockSignInWithEmailAndPassword.mockResolvedValue({ user: { uid: 'u1' } });
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+    await vi.waitFor(() => expect(callback).toHaveBeenCalled());
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it('invokes callback exactly once on error', async () => {
+    mockSignInWithEmailAndPassword.mockRejectedValue({ code: 'auth/wrong-password' });
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+    await vi.waitFor(() => expect(callback).toHaveBeenCalled());
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not throw when callback is omitted (default no-op)', () => {
+    mockSignInWithEmailAndPassword.mockResolvedValue({ user: { uid: 'u1' } });
+    expect(() => {
+      new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' });
+    }).not.toThrow();
+  });
+
+  it('passes empty string email and password to Firebase', async () => {
+    mockSignInWithEmailAndPassword.mockResolvedValue({ user: { uid: 'u1' } });
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: '', password: '' }, callback);
+    await vi.waitFor(() => expect(callback).toHaveBeenCalledWith(null, expect.anything()));
+    expect(mockSignInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), '', '');
   });
 });
