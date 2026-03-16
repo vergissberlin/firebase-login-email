@@ -26,6 +26,19 @@ describe('FirebaseLoginEmail', () => {
     expect(mockGetAuth).toHaveBeenCalledWith(fakeApp);
   });
 
+  it('invokes callback with error when getAuth throws synchronously', () => {
+    const syncError = new Error('invalid app');
+    mockGetAuth.mockImplementation(() => {
+      throw syncError;
+    });
+
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+
+    expect(callback).toHaveBeenCalledWith(syncError, null);
+    expect(mockSignInWithEmailAndPassword).not.toHaveBeenCalled();
+  });
+
   it('calls signInWithEmailAndPassword with auth, email and password', () => {
     const authInstance = {};
     mockGetAuth.mockReturnValue(authInstance);
@@ -122,6 +135,23 @@ describe('FirebaseLoginEmail', () => {
   });
 
   it('invokes callback with generic error for unknown auth error code', async () => {
+    mockSignInWithEmailAndPassword.mockRejectedValue({ code: 'auth/unknown-code' });
+
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining('Error logging user in'),
+          code: 'auth/unknown-code',
+        }),
+        null
+      );
+    });
+  });
+
+  it('invokes callback with friendly message for auth/too-many-requests', async () => {
     mockSignInWithEmailAndPassword.mockRejectedValue({ code: 'auth/too-many-requests' });
 
     const callback = vi.fn();
@@ -129,10 +159,25 @@ describe('FirebaseLoginEmail', () => {
 
     await vi.waitFor(() => {
       expect(callback).toHaveBeenCalledWith(
-        expect.objectContaining({ message: expect.stringContaining('Error logging user in') }),
+        expect.objectContaining({
+          message: expect.stringContaining('Too many failed attempts'),
+          code: 'auth/too-many-requests',
+        }),
         null
       );
     });
+  });
+
+  it('passes auth error code on error object for consumer branching', async () => {
+    mockSignInWithEmailAndPassword.mockRejectedValue({ code: 'auth/wrong-password' });
+
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+
+    await vi.waitFor(() => expect(callback).toHaveBeenCalled());
+    const err = callback.mock.calls[0][0];
+    expect(err).not.toBeNull();
+    expect((err as { code?: string }).code).toBe('auth/wrong-password');
   });
 
   it('invokes callback exactly once on success', async () => {

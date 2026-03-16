@@ -27,6 +27,31 @@ export interface LoginCredentials {
 /** Callback invoked when sign-in completes (error or user). */
 export type LoginCallback = (error: Error | null, user: User | null) => void;
 
+/** Error with optional Firebase auth error code (e.g. "auth/wrong-password"). */
+export interface AuthError extends Error {
+  code?: string;
+}
+
+function safeInvokeCallback(
+  callback: LoginCallback,
+  error: Error | null,
+  user: User | null
+): void {
+  try {
+    callback(error, user);
+  } catch (e) {
+    const wrapped =
+      e instanceof Error ? e : new Error(String(e));
+    (wrapped as AuthError).code = 'auth/callback-error';
+    try {
+      callback(wrapped, null);
+    } catch {
+      // Avoid unhandled rejection if callback throws again
+      console.error('[firebase-login-email] Callback threw:', wrapped);
+    }
+  }
+}
+
 class FirebaseLoginEmail {
   constructor(
     app: FirebaseApp = {} as FirebaseApp,
@@ -40,30 +65,58 @@ class FirebaseLoginEmail {
       throw new Error('Data object must have a "password" field!');
     }
 
-    const auth = getAuth(app);
+    let auth;
+    try {
+      auth = getAuth(app);
+    } catch (syncError: unknown) {
+      const err =
+        syncError instanceof Error
+          ? syncError
+          : new Error('Error initializing auth: ' + String(syncError));
+      safeInvokeCallback(callback, err, null);
+      return;
+    }
+
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
-        callback(null, userCredential.user);
+        safeInvokeCallback(callback, null, userCredential.user);
       })
       .catch((error: unknown) => {
         const err =
           error && typeof error === 'object' && 'code' in error
             ? this.normalizeAuthError(error as { code?: string })
             : new Error('Error logging user in: ' + String(error));
-        callback(err, null);
+        safeInvokeCallback(callback, err, null);
       });
   }
 
-  private normalizeAuthError(error: { code?: string }): Error {
-    switch (error.code) {
+  private normalizeAuthError(
+    error: { code?: string } & Record<string, unknown>
+  ): AuthError {
+    const message = error.code
+      ? this.authErrorMessage(error.code)
+      : 'Error logging user in: ' + String(error);
+    const err = new Error(message) as AuthError;
+    if (error.code) err.code = error.code;
+    return err;
+  }
+
+  private authErrorMessage(code: string): string {
+    switch (code) {
       case 'auth/invalid-email':
-        return new Error('The specified user account email is invalid.');
+        return 'The specified user account email is invalid.';
       case 'auth/wrong-password':
-        return new Error('The specified user account password is incorrect.');
+        return 'The specified user account password is incorrect.';
       case 'auth/user-not-found':
-        return new Error('The specified user account does not exist.');
+        return 'The specified user account does not exist.';
+      case 'auth/too-many-requests':
+        return 'Too many failed attempts. Try again later.';
+      case 'auth/network-request-failed':
+        return 'A network error occurred. Check your connection.';
+      case 'auth/operation-not-allowed':
+        return 'Email/password sign-in is not enabled for this app.';
       default:
-        return new Error('Error logging user in: ' + String(error));
+        return 'Error logging user in: ' + code;
     }
   }
 
