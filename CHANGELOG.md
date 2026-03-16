@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0](https://github.com/vergissberlin/firebase-login-email/compare/firebase-login-email-v0.2.0...firebase-login-email-v0.3.0) (2026-03-16)
+
+
+### Features
+
+* enhance FirebaseLoginEmail functionality and improve type safety ([a78820b](https://github.com/vergissberlin/firebase-login-email/commit/a78820b11ee618dcf4a7ccc0185a52f42757c53f))
+* improve error handling and callback safety in FirebaseLoginEmail ([4ae4dd0](https://github.com/vergissberlin/firebase-login-email/commit/4ae4dd0e63150e171bb57b2a84dc29ee6f2d5083))
+
 ## [0.2.0](https://github.com/vergissberlin/firebase-login-email/compare/firebase-login-email-v0.1.0...firebase-login-email-v0.2.0) (2026-03-16)
 
 
