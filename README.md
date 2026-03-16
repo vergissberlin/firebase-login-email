@@ -75,50 +75,12 @@ Load credentials from a `.env` file (e.g. with `dotenv`) or set `FIREBASE_API_KE
 
 ## Support
 
-Please report issues to [ticket system](https://github.com/vergissberlin/firebase-login-email/issues).
-Pull requests are welcome here!
+Please report issues to the [ticket system](https://github.com/vergissberlin/firebase-login-email/issues).
 
 ## Contributing
 
-1. Fork it
-2. Create your feature branch (`git flow feature start my-new-feature`)
-3. Commit your changes (`git commit -am 'Add code'`)
-4. Finish your implementation (`git flow feature finish my-new-feature`)
-5. Push to origin (`git push origin`)
-6. Create new Pull Request
-
-## Testing
-
-**Unit tests** (Firebase is mocked; no credentials needed):
-
-```bash
-pnpm install
-pnpm test
-```
-
-**Integration test** (uses real Firebase; set env vars first):
-
-```bash
-export FIREBASE_API_KEY=<YOUR_API_KEY>
-export FIREBASE_AUTH_DOMAIN=<YOUR_PROJECT_ID>.firebaseapp.com
-export FIREBASE_EMAIL=<test@email.com>
-export FIREBASE_PASSWORD=<1234567>
-pnpm run test:integration
-```
-
-## Install locally
-
-```bash
-cd /path/to/firebase-login-email/
-pnpm install
-export FIREBASE_API_KEY=<YOUR_API_KEY>
-export FIREBASE_AUTH_DOMAIN=<YOUR_PROJECT_ID>.firebaseapp.com
-export FIREBASE_EMAIL=<test@email.com>
-export FIREBASE_PASSWORD=<1234567>
-pnpm run test:integration
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute, run tests, and install the project locally.
 
 ## Thanks to
 
 1. A special thanks to the developers of **NodeJS** and **Firebase**.
-
