@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/vergissberlin/firebase-login-email/compare/firebase-login-email-v0.1.0...firebase-login-email-v0.2.0) (2026-03-16)
+
+
+### Features
+
+* update testing setup and dependencies ([56e87ac](https://github.com/vergissberlin/firebase-login-email/commit/56e87acbb415786384f8844d3428971e202f4249))
+
+
+### Bug Fixes
+
+* remove 'master' branch from release-please workflow configuration ([be7b106](https://github.com/vergissberlin/firebase-login-email/commit/be7b106f825655aac8252530e5e7aa68c3c06da7))
+
 ## [0.1.0](https://github.com/vergissberlin/firebase-login-email/compare/firebase-login-email-v0.0.4...firebase-login-email-v0.1.0) (2026-03-16)
 
 
