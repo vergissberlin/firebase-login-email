@@ -28,23 +28,32 @@ npm install firebase firebase-login-email
 ## Example
 
 ```javascript
-let firebase = require('firebase/app');
+const { initializeApp } = require('firebase/app');
 require('firebase/auth');
+const FirebaseLoginEmail = require('firebase-login-email');
 
-let app = firebase.initializeApp({
-    apiKey: "<Your Firebase API Key>",
-    authDomain: "<Your Project ID>.firebaseapp.com"
+const app = initializeApp({
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
 });
 
-FirebaseLoginEmail(app, {
-        email: "<Your Email>",
-        password: "<Your Password>"
-    },
-    function (error, user) {
-        console.log(user.uid);
+new FirebaseLoginEmail(
+  app,
+  {
+    email: process.env.FIREBASE_EMAIL,
+    password: process.env.FIREBASE_PASSWORD,
+  },
+  (error, user) => {
+    if (error) {
+      console.error('Login failed:', error.message);
+      return;
     }
+    console.log('Logged in as:', user.uid);
+  }
 );
 ```
+
+Load credentials from a `.env` file (e.g. with `dotenv`) or set `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_EMAIL`, and `FIREBASE_PASSWORD` in your environment before running.
 
 ## Support
 
