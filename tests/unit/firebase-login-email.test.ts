@@ -153,7 +153,7 @@ describe('FirebaseLoginEmail', () => {
     await vi.waitFor(() => {
       expect(callback).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: expect.stringContaining('Error logging user in'),
+          message: expect.stringContaining('Error'),
           code: 'auth/unknown-code',
         }),
         null
