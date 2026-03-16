@@ -16,7 +16,8 @@ describe('FirebaseLoginEmail', () => {
   const fakeApp = { name: '[DEFAULT]', options: {} };
 
   beforeEach(() => {
-    mockGetAuth.mockClear();
+    mockGetAuth.mockReset();
+    mockGetAuth.mockReturnValue({});
     mockSignInWithEmailAndPassword.mockReset();
   });
 
@@ -180,6 +181,101 @@ describe('FirebaseLoginEmail', () => {
     expect((err as { code?: string }).code).toBe('auth/wrong-password');
   });
 
+  it('invokes callback with friendly message for auth/network-request-failed', async () => {
+    mockSignInWithEmailAndPassword.mockRejectedValue({
+      code: 'auth/network-request-failed',
+    });
+
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining('network'),
+          code: 'auth/network-request-failed',
+        }),
+        null
+      );
+    });
+  });
+
+  it('invokes callback with friendly message for auth/operation-not-allowed', async () => {
+    mockSignInWithEmailAndPassword.mockRejectedValue({
+      code: 'auth/operation-not-allowed',
+    });
+
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining('not enabled'),
+          code: 'auth/operation-not-allowed',
+        }),
+        null
+      );
+    });
+  });
+
+  it('invokes callback with generic error when rejection is not an object', async () => {
+    mockSignInWithEmailAndPassword.mockRejectedValue('plain string error');
+
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining('Error logging user in'),
+        }),
+        null
+      );
+    });
+  });
+
+  it('invokes callback with error when getAuth throws non-Error', () => {
+    mockGetAuth.mockImplementation(() => {
+      throw 'string throw';
+    });
+
+    const callback = vi.fn();
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+
+    expect(callback).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: expect.stringContaining('Error initializing auth'),
+      }),
+      null
+    );
+  });
+
+  it('when callback throws on success, invokes callback again with wrapped error', async () => {
+    mockSignInWithEmailAndPassword.mockResolvedValue({ user: { uid: 'u1' } });
+    const callback = vi.fn().mockImplementation((_err: unknown, user: unknown) => {
+      if (user !== null) throw new Error('consumer threw');
+    });
+
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    new FirebaseLoginEmail(fakeApp, { email: 'a@b.co', password: 'pwd' }, callback);
+
+    await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(2));
+
+    expect(callback).toHaveBeenNthCalledWith(1, null, expect.anything());
+    expect(callback).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        message: 'consumer threw',
+        code: 'auth/callback-error',
+      }),
+      null
+    );
+
+    consoleSpy.mockRestore();
+  });
+
   it('invokes callback exactly once on success', async () => {
     mockSignInWithEmailAndPassword.mockResolvedValue({ user: { uid: 'u1' } });
     const callback = vi.fn();
@@ -227,6 +323,59 @@ describe('FirebaseLoginEmail', () => {
       await expect(
         FirebaseLoginEmail.login(fakeApp, { email: 'a@b.co', password: 'wrong' })
       ).rejects.toThrow(/password/);
+    });
+
+    it('rejects when getAuth throws synchronously', async () => {
+      mockGetAuth.mockImplementation(() => {
+        throw new Error('invalid app');
+      });
+
+      await expect(
+        FirebaseLoginEmail.login(fakeApp, { email: 'a@b.co', password: 'pwd' })
+      ).rejects.toThrow('invalid app');
+    });
+
+    it('rejects with AuthError containing code for auth/user-not-found', async () => {
+      mockSignInWithEmailAndPassword.mockRejectedValue({ code: 'auth/user-not-found' });
+
+      try {
+        await FirebaseLoginEmail.login(fakeApp, {
+          email: 'missing@b.co',
+          password: 'pwd',
+        });
+      } catch (err) {
+        expect(err).toBeInstanceOf(Error);
+        expect((err as { code?: string }).code).toBe('auth/user-not-found');
+        expect((err as Error).message).toContain('does not exist');
+      }
+    });
+
+    it('rejects with error on non-object rejection', async () => {
+      mockSignInWithEmailAndPassword.mockRejectedValue('network died');
+
+      await expect(
+        FirebaseLoginEmail.login(fakeApp, { email: 'a@b.co', password: 'pwd' })
+      ).rejects.toMatchObject({
+        message: expect.stringContaining('Error logging user in'),
+      });
+    });
+
+    it('rejects when credentials are invalid (email not a string)', async () => {
+      await expect(
+        FirebaseLoginEmail.login(fakeApp, {
+          email: 99 as unknown as string,
+          password: 'pwd',
+        })
+      ).rejects.toThrow('email');
+    });
+
+    it('rejects when credentials are invalid (password not a string)', async () => {
+      await expect(
+        FirebaseLoginEmail.login(fakeApp, {
+          email: 'a@b.co',
+          password: null as unknown as string,
+        })
+      ).rejects.toThrow('password');
     });
   });
 });
