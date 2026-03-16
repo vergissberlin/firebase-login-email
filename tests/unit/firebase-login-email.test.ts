@@ -2,10 +2,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const mockGetAuth = vi.fn(() => ({}));
 const mockSignInWithEmailAndPassword = vi.fn();
+const mockCreateUserWithEmailAndPassword = vi.fn();
+const mockSendPasswordResetEmail = vi.fn();
+const mockOnAuthStateChanged = vi.fn();
 
 vi.mock('firebase/auth', () => ({
   getAuth: mockGetAuth,
   signInWithEmailAndPassword: mockSignInWithEmailAndPassword,
+  createUserWithEmailAndPassword: mockCreateUserWithEmailAndPassword,
+  sendPasswordResetEmail: mockSendPasswordResetEmail,
+  onAuthStateChanged: mockOnAuthStateChanged,
 }));
 
 // Load SUT after mock so firebase/auth is mocked
@@ -19,6 +25,9 @@ describe('FirebaseLoginEmail', () => {
     mockGetAuth.mockReset();
     mockGetAuth.mockReturnValue({});
     mockSignInWithEmailAndPassword.mockReset();
+    mockCreateUserWithEmailAndPassword.mockReset();
+    mockSendPasswordResetEmail.mockReset();
+    mockOnAuthStateChanged.mockReset();
   });
 
   it('calls getAuth with the provided app', () => {
@@ -376,6 +385,141 @@ describe('FirebaseLoginEmail', () => {
           password: null as unknown as string,
         })
       ).rejects.toThrow('password');
+    });
+  });
+
+  describe('loginWithIdToken()', () => {
+    it('resolves with user and idToken', async () => {
+      const user = { uid: 'u1', email: 'a@b.co', getIdToken: vi.fn().mockResolvedValue('jwt-token-123') };
+      mockSignInWithEmailAndPassword.mockResolvedValue({ user });
+
+      const result = await FirebaseLoginEmail.loginWithIdToken(fakeApp, {
+        email: 'a@b.co',
+        password: 'pwd',
+      });
+
+      expect(result.user).toBe(user);
+      expect(result.idToken).toBe('jwt-token-123');
+    });
+  });
+
+  describe('getIdToken()', () => {
+    it('returns the user id token', async () => {
+      const mockUser = { getIdToken: vi.fn().mockResolvedValue('my-id-token') };
+
+      const token = await FirebaseLoginEmail.getIdToken(mockUser as any);
+
+      expect(token).toBe('my-id-token');
+      expect(mockUser.getIdToken).toHaveBeenCalled();
+    });
+  });
+
+  describe('signUp()', () => {
+    it('creates user and returns User', async () => {
+      const user = { uid: 'new-user', email: 'new@b.co' };
+      mockCreateUserWithEmailAndPassword.mockResolvedValue({ user });
+
+      const result = await FirebaseLoginEmail.signUp(fakeApp, {
+        email: 'new@b.co',
+        password: 'secret123',
+      });
+
+      expect(result).toBe(user);
+      expect(mockGetAuth).toHaveBeenCalledWith(fakeApp);
+      expect(mockCreateUserWithEmailAndPassword).toHaveBeenCalledWith(
+        expect.anything(),
+        'new@b.co',
+        'secret123'
+      );
+    });
+
+    it('rejects with AuthError when email already in use', async () => {
+      mockCreateUserWithEmailAndPassword.mockRejectedValue({
+        code: 'auth/email-already-in-use',
+      });
+
+      await expect(
+        FirebaseLoginEmail.signUp(fakeApp, {
+          email: 'existing@b.co',
+          password: 'pwd',
+        })
+      ).rejects.toMatchObject({
+        message: expect.stringContaining('already exists'),
+        code: 'auth/email-already-in-use',
+      });
+    });
+
+    it('throws when email is not a string', async () => {
+      await expect(
+        FirebaseLoginEmail.signUp(fakeApp, {
+          email: 123 as unknown as string,
+          password: 'pwd',
+        })
+      ).rejects.toThrow('email');
+    });
+  });
+
+  describe('sendPasswordReset()', () => {
+    it('calls sendPasswordResetEmail with auth and email', async () => {
+      mockSendPasswordResetEmail.mockResolvedValue(undefined);
+
+      await FirebaseLoginEmail.sendPasswordReset(fakeApp, 'user@example.com');
+
+      expect(mockGetAuth).toHaveBeenCalledWith(fakeApp);
+      expect(mockSendPasswordResetEmail).toHaveBeenCalledWith(
+        expect.anything(),
+        'user@example.com'
+      );
+    });
+
+    it('throws when email is empty', async () => {
+      await expect(
+        FirebaseLoginEmail.sendPasswordReset(fakeApp, '')
+      ).rejects.toThrow('Email');
+    });
+
+    it('rejects with normalized error on auth failure', async () => {
+      mockSendPasswordResetEmail.mockRejectedValue({ code: 'auth/user-not-found' });
+
+      await expect(
+        FirebaseLoginEmail.sendPasswordReset(fakeApp, 'nope@b.co')
+      ).rejects.toMatchObject({
+        code: 'auth/user-not-found',
+        message: expect.stringContaining('does not exist'),
+      });
+    });
+  });
+
+  describe('onAuthStateChanged()', () => {
+    it('subscribes and returns unsubscribe function', () => {
+      const unsubscribe = vi.fn();
+      mockOnAuthStateChanged.mockReturnValue(unsubscribe);
+
+      const result = FirebaseLoginEmail.onAuthStateChanged(fakeApp, () => {});
+
+      expect(result).toBe(unsubscribe);
+      expect(mockOnAuthStateChanged).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.any(Function)
+      );
+    });
+
+    it('invokes callback when auth state changes', () => {
+      let capturedCallback: ((u: unknown) => void) | null = null;
+      mockOnAuthStateChanged.mockImplementation((_auth: unknown, cb: (u: unknown) => void) => {
+        capturedCallback = cb;
+        return () => {};
+      });
+
+      const callback = vi.fn();
+      FirebaseLoginEmail.onAuthStateChanged(fakeApp, callback);
+
+      expect(capturedCallback).not.toBeNull();
+      capturedCallback!({ uid: 'signed-in-user' });
+      expect(callback).toHaveBeenCalledWith({ uid: 'signed-in-user' });
+
+      capturedCallback!(null);
+      expect(callback).toHaveBeenCalledWith(null);
     });
   });
 });

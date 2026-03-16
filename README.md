@@ -73,6 +73,45 @@ console.log('Logged in as:', user.uid);
 
 Load credentials from a `.env` file (e.g. with `dotenv`) or set `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_EMAIL`, and `FIREBASE_PASSWORD` in your environment before running.
 
+### Sign up (create account)
+
+```javascript
+const user = await FirebaseLoginEmail.signUp(app, {
+  email: process.env.FIREBASE_EMAIL,
+  password: process.env.FIREBASE_PASSWORD,
+});
+console.log('Created user:', user.uid);
+```
+
+### Password reset
+
+```javascript
+await FirebaseLoginEmail.sendPasswordReset(app, 'user@example.com');
+// User receives an email with a reset link
+```
+
+### Auth state (react to sign-in / sign-out)
+
+```javascript
+const unsubscribe = FirebaseLoginEmail.onAuthStateChanged(app, (user) => {
+  if (user) console.log('Signed in:', user.uid);
+  else console.log('Signed out');
+});
+// Later: unsubscribe() to stop listening
+```
+
+### ID token (for your backend)
+
+```javascript
+const { user, idToken } = await FirebaseLoginEmail.loginWithIdToken(app, {
+  email: process.env.FIREBASE_EMAIL,
+  password: process.env.FIREBASE_PASSWORD,
+});
+// Send idToken in Authorization header: Bearer <idToken>
+// Or get token from an already signed-in user:
+const token = await FirebaseLoginEmail.getIdToken(user);
+```
+
 ## Support
 
 Please report issues to the [ticket system](https://github.com/vergissberlin/firebase-login-email/issues).
