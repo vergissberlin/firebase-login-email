@@ -76,6 +76,3 @@ node tests/integration/firebase-login-email-integration.js
 
 1. A special thanks to the developers of **NodeJS** and **Firebase**.
 
-
----
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/vergissberlin/firebase-login-email/trend.png)](https://bitdeli.com/free "Bitdeli Badge") [![Greenkeeper badge](https://badges.greenkeeper.io/vergissberlin/firebase-login-email.svg)](https://greenkeeper.io/)
