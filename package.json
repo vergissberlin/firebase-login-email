@@ -4,6 +4,7 @@
   "description": "This package is a wrapper to Firebase simple login including all dependencies with the exception of firebase it self. Authenticate your Firebase using your Firebase simple login credentials.",
   "main": "dist/firebase-login-email.js",
   "scripts": {
+    "build": "tsc",
     "test": "node tests/integration/firebase-login-email-integration.js"
   },
   "repository": {
@@ -37,14 +38,11 @@
     "firebase": "^8.0.1"
   },
   "devDependencies": {
-    "coffee-script": "^1.7.1",
-    "coffeelint": "^2.1.0",
     "firebase": "^8.0.1",
     "grunt": "^1.0.3",
-    "grunt-coffeelint": "0.0.16",
     "grunt-contrib-clean": "^2.0.0",
-    "grunt-contrib-coffee": "^2.0.0",
     "grunt-contrib-watch": "^1.1.0",
-    "load-grunt-tasks": "^5.0.0"
+    "load-grunt-tasks": "^5.0.0",
+    "typescript": "^5.7.3"
   }
 }
