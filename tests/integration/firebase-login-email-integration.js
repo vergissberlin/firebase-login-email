@@ -12,12 +12,11 @@
  */
 
 // Requirements
-var firebase = require('firebase/app');
-require('firebase/auth');
+var { initializeApp } = require('firebase/app');
 var FirebaseLoginEmail = require('../../dist/firebase-login-email');
 
 // Initialize Firebase app
-var app = firebase.initializeApp({
+var app = initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN
 });
