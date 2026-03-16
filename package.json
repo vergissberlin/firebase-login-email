@@ -6,7 +6,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
-    "test": "node tests/integration/firebase-login-email-integration.js"
+    "test": "pnpm exec vitest run",
+    "test:integration": "node tests/integration/firebase-login-email-integration.js"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "typescript": "^5.7.3",
-    "vite": "^8.0.0"
+    "vite": "^8.0.0",
+    "vitest": "^3.2.4"
   }
 }

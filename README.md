@@ -69,16 +69,35 @@ Pull requests are welcome here!
 5. Push to origin (`git push origin`)
 6. Create new Pull Request
 
-## Install locally
+## Testing
+
+**Unit tests** (Firebase is mocked; no credentials needed):
 
 ```bash
-cd /path/to/firebase-login-email/
-npm install
+pnpm install
+pnpm test
+```
+
+**Integration test** (uses real Firebase; set env vars first):
+
+```bash
 export FIREBASE_API_KEY=<YOUR_API_KEY>
 export FIREBASE_AUTH_DOMAIN=<YOUR_PROJECT_ID>.firebaseapp.com
 export FIREBASE_EMAIL=<test@email.com>
 export FIREBASE_PASSWORD=<1234567>
-node tests/integration/firebase-login-email-integration.js
+pnpm run test:integration
+```
+
+## Install locally
+
+```bash
+cd /path/to/firebase-login-email/
+pnpm install
+export FIREBASE_API_KEY=<YOUR_API_KEY>
+export FIREBASE_AUTH_DOMAIN=<YOUR_PROJECT_ID>.firebaseapp.com
+export FIREBASE_EMAIL=<test@email.com>
+export FIREBASE_PASSWORD=<1234567>
+pnpm run test:integration
 ```
 
 ## Thanks to

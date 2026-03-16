@@ -11,6 +11,14 @@
  node tests/integration/firebase-login-email-integration.js
  */
 
+var required = ['FIREBASE_API_KEY', 'FIREBASE_AUTH_DOMAIN', 'FIREBASE_EMAIL', 'FIREBASE_PASSWORD'];
+var missing = required.filter(function (key) { return !process.env[key]; });
+if (missing.length) {
+    console.error('Missing required env vars for integration test:', missing.join(', '));
+    console.error('Set them first, e.g.: export FIREBASE_EMAIL=your@email.com');
+    process.exit(1);
+}
+
 // Requirements
 var { initializeApp } = require('firebase/app');
 var FirebaseLoginEmail = require('../../dist/firebase-login-email');
@@ -22,8 +30,7 @@ var app = initializeApp({
 });
 
 // Login process
-FirebaseLoginEmail(app, {
-    debug: true,
+new FirebaseLoginEmail(app, {
     email: process.env.FIREBASE_EMAIL,
     password: process.env.FIREBASE_PASSWORD
 }, function (error, data) {
