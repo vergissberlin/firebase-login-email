@@ -14,6 +14,8 @@
  * @param   {*} data Authentication object with email and password
  * @param   {*} callback Callback function
  */
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
 class FirebaseLoginEmail {
     constructor(app: any = {}, data: any = {}, callback: Function = () => {}) {
         // Validation
@@ -24,7 +26,8 @@ class FirebaseLoginEmail {
             throw new Error('Data object must have an "password" field!');
         }
 
-        app.auth().signInWithEmailAndPassword(data.email, data.password)
+        const auth = getAuth(app);
+        signInWithEmailAndPassword(auth, data.email, data.password)
             .then((userCredential: any) => {
                 callback(null, userCredential.user);
             })
