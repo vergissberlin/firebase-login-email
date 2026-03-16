@@ -53,6 +53,24 @@ new FirebaseLoginEmail(
 );
 ```
 
+**Promise-based (async/await):**
+
+```javascript
+const { initializeApp } = require('firebase/app');
+const { FirebaseLoginEmail } = require('firebase-login-email');
+
+const app = initializeApp({
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+});
+
+const user = await FirebaseLoginEmail.login(app, {
+  email: process.env.FIREBASE_EMAIL,
+  password: process.env.FIREBASE_PASSWORD,
+});
+console.log('Logged in as:', user.uid);
+```
+
 Load credentials from a `.env` file (e.g. with `dotenv`) or set `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_EMAIL`, and `FIREBASE_PASSWORD` in your environment before running.
 
 ## Support

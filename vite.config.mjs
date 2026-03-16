@@ -13,8 +13,9 @@ export default defineConfig({
         lib: {
             entry: resolve(__dirname, 'src/firebase-login-email.ts'),
             name: 'FirebaseLoginEmail',
-            fileName: () => 'firebase-login-email.js',
-            formats: ['cjs'],
+            fileName: (format) =>
+                format === 'es' ? 'firebase-login-email.mjs' : 'firebase-login-email.js',
+            formats: ['cjs', 'es'],
         },
         rollupOptions: {
             external: ['firebase', /^firebase\/.*/],

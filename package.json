@@ -3,8 +3,18 @@
   "version": "0.2.0",
   "description": "This package is a wrapper to Firebase simple login including all dependencies with the exception of firebase it self. Authenticate your Firebase using your Firebase simple login credentials.",
   "main": "dist/firebase-login-email.js",
+  "module": "dist/firebase-login-email.mjs",
+  "types": "dist/firebase-login-email.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/firebase-login-email.d.ts",
+      "import": "./dist/firebase-login-email.mjs",
+      "require": "./dist/firebase-login-email.js"
+    }
+  },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && pnpm run build:types",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "dev": "vite build --watch",
     "test": "pnpm exec vitest run",
     "test:integration": "node tests/integration/firebase-login-email-integration.js"

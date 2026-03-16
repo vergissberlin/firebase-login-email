@@ -165,4 +165,23 @@ describe('FirebaseLoginEmail', () => {
     await vi.waitFor(() => expect(callback).toHaveBeenCalledWith(null, expect.anything()));
     expect(mockSignInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), '', '');
   });
+
+  describe('login()', () => {
+    it('resolves with user on success', async () => {
+      const user = { uid: 'promise-user', email: 'p@t.com' };
+      mockSignInWithEmailAndPassword.mockResolvedValue({ user });
+      const result = await FirebaseLoginEmail.login(fakeApp, {
+        email: 'p@t.com',
+        password: 'secret',
+      });
+      expect(result).toBe(user);
+    });
+
+    it('rejects with error on auth failure', async () => {
+      mockSignInWithEmailAndPassword.mockRejectedValue({ code: 'auth/wrong-password' });
+      await expect(
+        FirebaseLoginEmail.login(fakeApp, { email: 'a@b.co', password: 'wrong' })
+      ).rejects.toThrow(/password/);
+    });
+  });
 });

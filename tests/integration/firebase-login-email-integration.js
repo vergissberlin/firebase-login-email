@@ -11,39 +11,37 @@
  node tests/integration/firebase-login-email-integration.js
  */
 
-var required = ['FIREBASE_API_KEY', 'FIREBASE_AUTH_DOMAIN', 'FIREBASE_EMAIL', 'FIREBASE_PASSWORD'];
-var missing = required.filter(function (key) { return !process.env[key]; });
+const required = ['FIREBASE_API_KEY', 'FIREBASE_AUTH_DOMAIN', 'FIREBASE_EMAIL', 'FIREBASE_PASSWORD'];
+const missing = required.filter((key) => !process.env[key]);
 if (missing.length) {
-    console.error('Missing required env vars for integration test:', missing.join(', '));
-    console.error('Set them first, e.g.: export FIREBASE_EMAIL=your@email.com');
-    process.exit(1);
+  console.error('Missing required env vars for integration test:', missing.join(', '));
+  console.error('Set them first, e.g.: export FIREBASE_EMAIL=your@email.com');
+  process.exit(1);
 }
 
-// Requirements
-var { initializeApp } = require('firebase/app');
-var FirebaseLoginEmail = require('../../dist/firebase-login-email');
+const { initializeApp } = require('firebase/app');
+const FirebaseLoginEmail = require('../../dist/firebase-login-email');
 
-// Initialize Firebase app
-var app = initializeApp({
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN
+const app = initializeApp({
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
 });
 
-// Login process
-new FirebaseLoginEmail(app, {
+new FirebaseLoginEmail(
+  app,
+  {
     email: process.env.FIREBASE_EMAIL,
-    password: process.env.FIREBASE_PASSWORD
-}, function (error, data) {
+    password: process.env.FIREBASE_PASSWORD,
+  },
+  (error, data) => {
     if (error !== null) {
-        console.log(error);
-        process.exit(1);
-    } else {
-        //console.log(data);
-        process.exit(0);
+      console.log(error);
+      process.exit(1);
     }
-});
+    process.exit(0);
+  }
+);
 
-// Check exit code
-process.on('exit', function (code) {
-    console.log('About to exit with code:', code);
+process.on('exit', (code) => {
+  console.log('About to exit with code:', code);
 });
