@@ -22,28 +22,28 @@ Allows your node applications to authenticate a Firebase reference using Firebas
 Install via npm:
 
 ```bash
-    npm install firebase firebase-login-email
+npm install firebase firebase-login-email
 ```
 
 ## Example
 
 ```javascript
-    var firebase = require('firebase/app');
-    require('firebase/auth');
+let firebase = require('firebase/app');
+require('firebase/auth');
 
-    var app = firebase.initializeApp({
-        apiKey: "<Your Firebase API Key>",
-        authDomain: "<Your Project ID>.firebaseapp.com"
-    });
+let app = firebase.initializeApp({
+    apiKey: "<Your Firebase API Key>",
+    authDomain: "<Your Project ID>.firebaseapp.com"
+});
 
-    FirebaseLoginEmail(app, {
-            email: "<Your Email>",
-            password: "<Your Password>"
-        },
-        function (error, user) {
-            console.log(user.uid);
-        }
-    );
+FirebaseLoginEmail(app, {
+        email: "<Your Email>",
+        password: "<Your Password>"
+    },
+    function (error, user) {
+        console.log(user.uid);
+    }
+);
 ```
 
 ## Support
