@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/vergissberlin/firebase-login-email/compare/firebase-login-email-v0.3.0...firebase-login-email-v0.4.0) (2026-03-16)
+
+
+### Features
+
+* add user sign-up, password reset, and auth state change features to FirebaseLoginEmail ([e7f5e4f](https://github.com/vergissberlin/firebase-login-email/commit/e7f5e4f7bae3873cae25a94d3dbfb752c0e5be38))
+
+
+### Bug Fixes
+
+* **tests:** refine error message assertion in FirebaseLoginEmail tests ([a9faad5](https://github.com/vergissberlin/firebase-login-email/commit/a9faad55886d6cace57384c59d23491d797fb31a))
+
 ## [0.3.0](https://github.com/vergissberlin/firebase-login-email/compare/firebase-login-email-v0.2.0...firebase-login-email-v0.3.0) (2026-03-16)
 
 
