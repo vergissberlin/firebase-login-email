@@ -47,7 +47,7 @@
   },
   "homepage": "https://github.com/vergissberlin/firebase-login-email",
   "dependencies": {
-    "firebase": "^12.10.0"
+    "firebase": "^13.0.0"
   },
   "devDependencies": {
     "typescript": "^6.0.0",
